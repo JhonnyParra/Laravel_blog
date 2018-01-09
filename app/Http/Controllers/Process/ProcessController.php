@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Process;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+USE Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller as BaseController;
 
 class ProcessController extends BaseController {
@@ -14,20 +16,29 @@ class ProcessController extends BaseController {
    */
   public function toProcess(Request $request, $type) {
     if(method_exists($this, $type)) {
+      print_r($request,1);
       return $this->$type($request);
     }
 
-    return view('/',['title' => 'Site | Url not found']);
+    return view('dashboard')->with(['title' => 'Site | Url not found']);
   }
 
   /**
-   * Login process
+   * Login process.
    * @param $request Request Object.
    */
   public function login($request) {
-    $uid = $_POST['user_id'];
-    $pass = $_POST['pass'];
+    if($request->method() == 'POST') {
+      $user = $_POST['user_id'];
+      $pass = encrypt($_POST['pass']);
+     
+      $query = DB::select('select usertestname, password from test_users where usertestname = :un', [':un' => $user]);
 
-    return view('/',['title' => 'Site | Dashboard']);
+      return print_r($pass, 1);
+
+      return view('dashboard')->with(['title' => 'Site | Dashboard']);
+    }
+
+    return new RedirectResponse('/');
   }
 }

@@ -28,7 +28,12 @@ Route::get('/login', function() {
  * Process Controller
  */
 Route::post('/process/{type}', 'Process\ProcessController@toProcess');
+Route::get('/process/{type}', 'Process\ProcessController@toProcess');
 
 /* Test Controller
 Route::get('/test', 'MiController@miFun');
 */
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
